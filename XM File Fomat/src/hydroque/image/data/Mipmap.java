@@ -17,46 +17,41 @@
  * See the GNU General Public License for more details.
  * <http://www.gnu.org/licenses/>
  */
-package hydroque.texture.data;
+package hydroque.image.data;
 
 /*
- * data container for an abstract image
- * 
+ * Container for an array of data which represents a mipmap. Kind of extends Image class.
  */
-public class Image {
+public class Mipmap {
+
+	private final boolean transparency;
 	
-	public final int width, height;
-	public final boolean transparency;
+	private final Image[] data;
 	
-	public final byte[] body;
-	
-	public Image(int width, int height, boolean transparency, byte[] body) {
-		this.width = width;
-		this.height = height;
-		this.transparency = transparency;
-		this.body = body;
+	public Mipmap(boolean transparency, Image[] data) {
+		this.transparency = true;
+		this.data = data;
 	}
 	
 	/*
-	 * @return true if each 4th pixel in getPixels() are all opaque, else transulcent and false
+	 * @return whether or not at least one of the getImages()[i].hasTransparency()
 	 */
 	public boolean hasTransparency() {
 		return transparency;
 	}
 	
-	public int getWidth() {
-		return width;
-	}
-	
-	public int getHeight() {
-		return height;
+	/*
+	 * @return the number of mipmap levels. Same as getImages().length
+	 */
+	public int getLevels() {
+		return data.length;
 	}
 	
 	/*
-	 * @return the pixel array of bytes
+	 * @return a list of images which are to be used as the mipmaps
 	 */
-	public byte[] getPixels() {
-		return body;
+	public Image[] getImages() {
+		return data;
 	}
 	
 }

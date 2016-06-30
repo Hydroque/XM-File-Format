@@ -25,8 +25,8 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import de.matthiasmann.twl.utils.PNGDecoder;
-import hydroque.texture.data.Image;
-import hydroque.texture.data.Mipmap;
+import hydroque.image.data.Image;
+import hydroque.image.data.Mipmap;
 
 /*
  * Loads files into Image containers
