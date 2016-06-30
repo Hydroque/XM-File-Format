@@ -47,6 +47,7 @@ public class ImageLoader {
 	 * Provided for compatibility.
 	 * 
 	 * @param location file to be loaded in
+	 * @param decoder PNGDecoder to utilize
 	 * @param storage a manditory buffer to load data into
 	 * 
 	 * @return Image generated
