@@ -21,6 +21,7 @@ package hydroque.image.data;
 
 /*
  * Container for an array of data which represents a mipmap. Kind of extends Image class.
+ * 
  */
 public class Mipmap {
 

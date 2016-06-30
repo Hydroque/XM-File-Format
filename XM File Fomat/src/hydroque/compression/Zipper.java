@@ -34,6 +34,7 @@ import java.util.zip.ZipOutputStream;
 
 /*
  * Responsible for inflation and deflation of files.
+ * 
  */
 public class Zipper {
 
