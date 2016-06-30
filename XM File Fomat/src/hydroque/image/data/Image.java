@@ -25,10 +25,10 @@ package hydroque.image.data;
  */
 public class Image {
 	
-	public final int width, height;
-	public final boolean transparency;
+	private final int width, height;
+	private final boolean transparency;
 	
-	public final byte[] body;
+	private final byte[] body;
 	
 	public Image(int width, int height, boolean transparency, byte[] body) {
 		this.width = width;
