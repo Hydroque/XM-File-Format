@@ -32,7 +32,7 @@ import hydroque.image.data.Mipmap;
  * Loads files into Image containers
  * 
  */
-public class ImageLoader {
+public class XMLoader {
 
 	/*
 	 * loads data from file location into ByteBuffer storage using PNGDecoder, and an image is generated.
