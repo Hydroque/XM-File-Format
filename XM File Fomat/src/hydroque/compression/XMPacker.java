@@ -26,6 +26,10 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+/*
+ * responsible for handling XMP files
+ * 
+ */
 public class XMPacker {
 
 	/*
