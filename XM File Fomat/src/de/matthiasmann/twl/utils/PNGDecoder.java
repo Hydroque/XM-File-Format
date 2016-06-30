@@ -32,6 +32,7 @@
 package de.matthiasmann.twl.utils;
 
 import java.io.EOFException;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -81,8 +82,12 @@ public class PNGDecoder {
 	private byte[] palette, paletteA, transPixel;
 	
 	private Format format;
-
+	
 	public PNGDecoder(String location, Format format) throws IOException {
+		this(new File(location), format);
+	}
+
+	public PNGDecoder(File location, Format format) throws IOException {
 		this.input = new FileInputStream(location);
 		this.format = format;
 		this.crc = new CRC32();
@@ -252,7 +257,7 @@ public class PNGDecoder {
 			throw new UnsupportedOperationException("Not yet implemented");
 		}
 	}
-
+	
 	/**
 	 * Decodes the image into the specified buffer. The first line is placed at
 	 * the current position. After decode the buffer position is at the end of
