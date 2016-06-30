@@ -17,7 +17,7 @@
  * See the GNU General Public License for more details.
  * <http://www.gnu.org/licenses/>
  */
-package hydroque.texture;
+package hydroque.image;
 
 import java.io.File;
 import java.io.FileInputStream;
