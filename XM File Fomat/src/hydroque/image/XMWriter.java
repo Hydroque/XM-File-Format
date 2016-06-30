@@ -1,6 +1,6 @@
 package hydroque.image;
 
-import static hydroque.Util.*;
+import static hydroque.Bitwork.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
