@@ -4,7 +4,7 @@ package hydroque;
  * Basic utility functions that are used throughout this library
  * 
  */
-public class Util {
+public class Bitwork {
 
 	/* 
 	 * Compacts 4 bytes into an int
