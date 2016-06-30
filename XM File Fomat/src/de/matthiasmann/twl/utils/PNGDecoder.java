@@ -32,6 +32,7 @@
 package de.matthiasmann.twl.utils;
 
 import java.io.EOFException;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -78,9 +79,12 @@ public class PNGDecoder {
 
 	private int width, height, bitdepth, colorType, bytesPerPixel;
 	private byte[] palette, paletteA, transPixel;
+	
+	private Format format;
 
-	public PNGDecoder(InputStream input) throws IOException {
-		this.input = input;
+	public PNGDecoder(String location, Format format) throws IOException {
+		this.input = new FileInputStream(location);
+		this.format = format;
 		this.crc = new CRC32();
 		this.buffer = new byte[4096];
 
@@ -112,6 +116,10 @@ public class PNGDecoder {
 			throw new IOException("Missing PLTE chunk");
 		}
 	}
+	
+	public Format getTargetFormat() {
+		return format;
+	}
 
 	public int getHeight() {
 		return height;
@@ -120,7 +128,11 @@ public class PNGDecoder {
 	public int getWidth() {
 		return width;
 	}
-
+	
+	public void close() throws IOException {
+		input.close();
+	}
+	
 	/**
 	 * Checks if the image has a real alpha channel. This method does not check
 	 * for the presence of a tRNS chunk.
@@ -260,7 +272,7 @@ public class PNGDecoder {
 	 * @throws UnsupportedOperationException
 	 *             if the image can't be decoded into the desired format
 	 */
-	public void decode(ByteBuffer buffer, int stride, Format fmt)
+	public void decode(ByteBuffer buffer, int stride)
 			throws IOException {
 		final int offset = buffer.position();
 		final int lineSize = ((width * bitdepth + 7) / 8) * bytesPerPixel;
@@ -278,7 +290,7 @@ public class PNGDecoder {
 
 				switch (colorType) {
 				case COLOR_TRUECOLOR:
-					switch (fmt) {
+					switch (format) {
 					case ABGR:
 						copyRGBtoABGR(buffer, curLine);
 						break;
@@ -297,7 +309,7 @@ public class PNGDecoder {
 					}
 					break;
 				case COLOR_TRUEALPHA:
-					switch (fmt) {
+					switch (format) {
 					case ABGR:
 						copyRGBAtoABGR(buffer, curLine);
 						break;
@@ -316,7 +328,7 @@ public class PNGDecoder {
 					}
 					break;
 				case COLOR_GREYSCALE:
-					switch (fmt) {
+					switch (format) {
 					case LUMINANCE:
 					case ALPHA:
 						copy(buffer, curLine);
@@ -327,7 +339,7 @@ public class PNGDecoder {
 					}
 					break;
 				case COLOR_GREYALPHA:
-					switch (fmt) {
+					switch (format) {
 					case LUMINANCE_ALPHA:
 						copy(buffer, curLine);
 						break;
@@ -354,7 +366,7 @@ public class PNGDecoder {
 						throw new UnsupportedOperationException(
 								"Unsupported bitdepth for this image");
 					}
-					switch (fmt) {
+					switch (format) {
 					case ABGR:
 						copyPALtoABGR(buffer, palLine);
 						break;
@@ -402,7 +414,7 @@ public class PNGDecoder {
 	 * @throws UnsupportedOperationException
 	 *             if the image can't be decoded into the desired format
 	 */
-	public void decodeFlipped(ByteBuffer buffer, int stride, Format fmt)
+	public void decodeFlipped(ByteBuffer buffer, int stride)
 			throws IOException {
 		if (stride <= 0) {
 			throw new IllegalArgumentException("stride");
@@ -410,7 +422,7 @@ public class PNGDecoder {
 		int pos = buffer.position();
 		int posDelta = (height - 1) * stride;
 		buffer.position(pos + posDelta);
-		decode(buffer, -stride, fmt);
+		decode(buffer, -stride);
 		buffer.position(buffer.position() + posDelta);
 	}
 
