@@ -36,7 +36,7 @@ public class XMLoader {
 
 	/*
 	 * loads data from file location into ByteBuffer storage using PNGDecoder, and an image is generated.
-	 * Provided for compatibility.
+	 * Provided for compatibility. It will iterate through the bytes to try to find transparency.
 	 * 
 	 * @param location file to be loaded in
 	 * @param decoder PNGDecoder to utilize
@@ -48,7 +48,15 @@ public class XMLoader {
 		final int width = decoder.getWidth(), height = decoder.getHeight();
 		decoder.decode(storage, decoder.getWidth() * 4);
 		decoder.close();
-		return new Image(width, height, true, storage.array());
+		storage.flip();
+		storage.rewind();
+		boolean transparency = false;
+		for (int i=3; i<storage.array().length; i+=4) {
+			if((transparency = storage.array()[i] != -1))
+				break;
+		}
+		storage.flip();
+		return new Image(width, height, transparency, storage.array());
 	}
 	
 	/*
