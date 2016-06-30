@@ -35,14 +35,6 @@ import hydroque.image.data.Mipmap;
 public class ImageLoader {
 
 	/*
-	 * Overload method for {@link loadImagePNG}
-	 * 
-	 */
-	public static Image loadImagePNG(String location, PNGDecoder decoder, ByteBuffer storage) throws IOException {
-		return loadImagePNG(new File(location), decoder, storage);
-	}
-	
-	/*
 	 * loads data from file location into ByteBuffer storage using PNGDecoder, and an image is generated.
 	 * Provided for compatibility.
 	 * 
@@ -52,7 +44,7 @@ public class ImageLoader {
 	 * 
 	 * @return Image generated
 	 */
-	public static Image loadImagePNG(File location, PNGDecoder decoder, ByteBuffer storage) throws IOException {
+	public static Image loadImagePNG(PNGDecoder decoder, ByteBuffer storage) throws IOException {
 		final int width = decoder.getWidth(), height = decoder.getHeight();
 		decoder.decode(storage, decoder.getWidth() * 4);
 		decoder.close();
