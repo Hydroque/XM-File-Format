@@ -38,8 +38,8 @@ public class ImageLoader {
 	 * Overload method for {@link loadImagePNG}
 	 * 
 	 */
-	public static Image loadImagePNG(String location, ByteBuffer storage) throws IOException {
-		return loadImagePNG(new File(location), storage);
+	public static Image loadImagePNG(String location, PNGDecoder decoder, ByteBuffer storage) throws IOException {
+		return loadImagePNG(new File(location), decoder, storage);
 	}
 	
 	/*
@@ -51,12 +51,10 @@ public class ImageLoader {
 	 * 
 	 * @return Image generated
 	 */
-	public static Image loadImagePNG(File location, ByteBuffer storage) throws IOException {
-		final FileInputStream fis = new FileInputStream(location);
-		final PNGDecoder decoder = new PNGDecoder(fis);
+	public static Image loadImagePNG(File location, PNGDecoder decoder, ByteBuffer storage) throws IOException {
 		final int width = decoder.getWidth(), height = decoder.getHeight();
-		decoder.decode(storage, decoder.getWidth() * 4, PNGDecoder.Format.RGBA);
-		fis.close();
+		decoder.decode(storage, decoder.getWidth() * 4);
+		decoder.close();
 		return new Image(width, height, true, storage.array());
 	}
 	
