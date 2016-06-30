@@ -122,6 +122,10 @@ public class PNGDecoder {
 		}
 	}
 	
+	public void setTargetFormat(Format format) {
+		this.format = format;
+	}
+	
 	public Format getTargetFormat() {
 		return format;
 	}
@@ -132,6 +136,10 @@ public class PNGDecoder {
 
 	public int getWidth() {
 		return width;
+	}
+	
+	public InputStream getInputStream() {
+		return input;
 	}
 	
 	public void close() throws IOException {
