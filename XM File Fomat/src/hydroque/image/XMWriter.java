@@ -25,11 +25,12 @@ public class XMWriter {
 				(byte) ((image.getHeight()&0xFF) >>> 0)
 			});
 		fos.write(image.getPixels());
+		fos.flush();
 		fos.close();
 	}
 	
-	public static void writeXMM(Image[] image, String destination) throws IOException {
-		writeXMM(image, new File(destination));
+	public static void writeXMM(Image[] images, String destination) throws IOException {
+		writeXMM(images, new File(destination));
 	}
 	
 	public static void writeXMM(Image[] images, File destination) throws IOException {
@@ -49,6 +50,7 @@ public class XMWriter {
 			fos.write(img.hasTransparency() ? 0b1 : 0b0);
 			fos.write(img.getPixels());
 		}
+		fos.flush();
 		fos.close();
 	}
 	
