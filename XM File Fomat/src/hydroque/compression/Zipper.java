@@ -166,7 +166,7 @@ public class Zipper {
 		ZipEntry entry;
 		while((entry = zis.getNextEntry()) != null) {
 			final BufferedOutputStream dest = new BufferedOutputStream(
-					new FileOutputStream(new File(destination, entry.getName())), 4096);
+					new FileOutputStream(new File(destination, entry.getName().substring(entry.getName().lastIndexOf("\\")))), 4096);
 			
 			int count;
 			while((count = zis.read(data)) != -1)
