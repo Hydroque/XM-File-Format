@@ -1,7 +1,7 @@
 # XM Files Format
-Simple files. Faster image loading. Better image storage.
+Simple files. Faster loading. Better storage. Video game file formats and compression.
 
-This library is aimed at video games, but does have uses outside of video games - like normal images. Default support for these file types are unheard of. Don't be expecting to load these files in programs, yet. The plan is to have plugins for editors.
+This library is aimed at video games, but does have uses outside of video games - like normal images. Default support for these file types are unheard of. Don't be expecting to load these files in programs that don't use this library, yet. The plan is to have plugins for editors. It also features file compression.
 
 ### Featured file formats
 XMI - image file format
