@@ -84,7 +84,7 @@ public class Bitwork {
 		final int[] out = new int[a.length/4];
 		int pointer = 0;
 		for (int i=0; i<a.length; i+=4)
-			out[pointer++] = byteToInt(a[i], a[i+1], a[i+2], a[i+3]);
+			out[pointer++] = byteToInt(a[i+3], a[i+2], a[i+1], a[i]);
 		return out;
 	}
 	
