@@ -73,7 +73,7 @@ public class XMPacker {
 		temp.createNewFile();
 		final FileOutputStream temps = new FileOutputStream(temp);
 		temps.write(intToByte(files.length));
-		for (int i=2; i<files.length; i++) {
+		for (int i=0; i<files.length; i++) {
 			if(files[i].length() > Integer.MAX_VALUE) {
 				System.err.println("Error: File size > Integer.MAX_VALUE! No file generated.");
 				temps.close();
@@ -144,8 +144,6 @@ public class XMPacker {
 		final int[] lenints = byteRangeToInt(lenheader);
 		for (int i=0; i<files; i++) {
 			final byte[] name = new byte[lenints[i*2+1]], fbytes = new byte[lenints[i*2]];
-			sfis.read(name);
-			sfis.read(fbytes);
 			final File out = new File(destination, new String(name));
 			final FileOutputStream xmpfos = new FileOutputStream(out);
 			xmpfos.write(fbytes);
