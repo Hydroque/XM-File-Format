@@ -25,23 +25,24 @@ package hydroque.image.data;
  */
 public class Image {
 	
+	// Color Models
+	public static final int MONOCHROME = 1, RGB = 3, RGBA = 4;
+	
+	// Compression Type
+	public static final int NONE = 0, INFLATE = 1;
+	
 	private final int width, height;
-	private final boolean transparency;
+	private final int color_model;
+	private final int compression;
 	
 	private final byte[] body;
 	
-	public Image(int width, int height, boolean transparency, byte[] body) {
+	public Image(int width, int height, int color_model, int compression, byte[] body) {
 		this.width = width;
 		this.height = height;
-		this.transparency = transparency;
+		this.color_model = color_model;
+		this.compression = compression;
 		this.body = body;
-	}
-	
-	/*
-	 * @return true if each 4th pixel in getPixels() are all opaque, else transulcent and false
-	 */
-	public boolean hasTransparency() {
-		return transparency;
 	}
 	
 	public int getWidth() {
@@ -52,10 +53,15 @@ public class Image {
 		return height;
 	}
 	
-	/*
-	 * @return the pixel array of bytes
-	 */
-	public byte[] getPixels() {
+	public int getColorModel() {
+		return color_model;
+	}
+	
+	public int getCompression() {
+		return compression;
+	}
+	
+	public byte[] getBody() {
 		return body;
 	}
 	
