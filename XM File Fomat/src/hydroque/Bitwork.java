@@ -26,6 +26,38 @@ package hydroque;
 public class Bitwork {
 
 	/* 
+	 * Compacts 2 bytes into a short
+	 * 
+	 * @return the result
+	 */
+	public static int byteToShort(byte a, byte b) {
+		return (a&0xFF) << 8 | (b&0xFF);
+	}
+	
+	/*
+	 * Overload method for {@link byteToShort}
+	 * 
+	 * @param a the list of bytes to be converted
+	 * 
+	 * @return the result of {@link byteToShort}
+	 */
+	public static int byteToShort(byte[] a) {
+		return byteToShort(a[1], a[0]);
+	}
+	
+	/*
+	 * Creates a new byte array with the 2 byte segments of a short
+	 * 
+	 * @return the result
+	 */
+	public static byte[] intToShort(int a) {
+		return new byte[] {
+			(byte) (a),
+			(byte) (a >>> 8)
+		};
+	}
+	
+	/* 
 	 * Compacts 4 bytes into an int
 	 * 
 	 * @return the result
@@ -52,40 +84,57 @@ public class Bitwork {
 	 */
 	public static byte[] intToByte(int a) {
 		return new byte[] {
-			(byte) (a >>> 0),
+			(byte) (a),
 			(byte) (a >>> 8),
 			(byte) (a >>> 16),
 			(byte) (a >>> 24)
 		};
 	}
 	
-	/*
-	 * Creates a new byte array with the 2 byte segments of an int
-	 * 
-	 * @return the result
-	 */
-	public static byte[] intShortToByte(int a) {
-		return new byte[] {
-			(byte) (a >>> 0),
-			(byte) (a >>> 8),
-			(byte) (a >>> 16),
-			(byte) (a >>> 24)
-		};
-	}
-	
-	/*
-	 * Converts a byte array to an int array. It is manditory that: a.length % 4 == 0
-	 * 
-	 * @param the list of bytes
-	 * 
-	 * @return a int array, where each int is 4 bytes of the array. See {@link byteToInt}
-	 */
 	public static int[] byteRangeToInt(byte[] a) {
 		final int[] out = new int[a.length/4];
 		int pointer = 0;
 		for (int i=0; i<a.length; i+=4)
 			out[pointer++] = byteToInt(a[i+3], a[i+2], a[i+1], a[i]);
 		return out;
+	}
+	
+	/* 
+	 * Compacts 8 bytes into a double
+	 * 
+	 * @return the result
+	 */
+	public static double byteToDouble(byte a, byte b, byte c, byte d, byte e, byte f, byte g, byte h) {
+		return byteToInt(a, b, c, d) + byteToInt(e, f, g, h);
+	}
+	
+	/*
+	 * Overload method for {@link byteToDouble}
+	 * 
+	 * @param a the list of bytes to be converted
+	 * 
+	 * @return the result of {@link byteToDouble}
+	 */
+	public static double byteToDouble(byte[] a) {
+		return byteToDouble(a[7], a[6], a[5], a[4], a[3], a[2], a[1], a[0]);
+	}
+	
+	/*
+	 * Creates a new byte array with the 8 byte segments of a double (2 ints)
+	 * 
+	 * @return the result
+	 */
+	public static byte[] doubleToByte(int a, int b) {
+		return new byte[] {
+			(byte) (a),
+			(byte) (a >>> 8),
+			(byte) (a >>> 16),
+			(byte) (a >>> 24),
+			(byte) (b),
+			(byte) (b >>> 8),
+			(byte) (b >>> 16),
+			(byte) (b >>> 24)
+		};
 	}
 	
 }
