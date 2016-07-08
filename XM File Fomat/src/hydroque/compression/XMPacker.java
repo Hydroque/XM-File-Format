@@ -19,12 +19,12 @@
  */
 package hydroque.compression;
 
-import static hydroque.Bitwork.*;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import hydroque.Bitwork;
 
 /*
  * responsible for handling XMP files
@@ -72,7 +72,8 @@ public class XMPacker {
 		final File temp = File.createTempFile("xmp_gen" + System.currentTimeMillis(), ".tmp");
 		temp.createNewFile();
 		final FileOutputStream temps = new FileOutputStream(temp);
-		temps.write(intToByte(files.length));
+		temps.write(new byte[]{(byte)'x', (byte)'m', (byte)'p'});
+		temps.write(Bitwork.intToByte(files.length));
 		for (int i=0; i<files.length; i++) {
 			if(files[i].length() > Integer.MAX_VALUE) {
 				System.err.println("Error: File size > Integer.MAX_VALUE! No file generated.");
@@ -80,8 +81,8 @@ public class XMPacker {
 				temp.delete();
 				return;
 			}
-			temps.write(intToByte((int) files[i].length()));
-			temps.write(intToByte(files[i].getName().getBytes().length));
+			temps.write(Bitwork.intToByte((int) files[i].length()));
+			temps.write(Bitwork.intToByte(files[i].getName().getBytes().length));
 		}
 		byte[] buffer = new byte[4096];
 		for (int i=0; i<files.length; i++) {
@@ -135,15 +136,23 @@ public class XMPacker {
 		final File vtemp = File.createTempFile("xmp_gen" + System.currentTimeMillis(), ".tmp");
 		vtemp.createNewFile();
 		Zipper.unzip(source, vtemp, true);
-		byte[] one = new byte[4];
 		final FileInputStream sfis = new FileInputStream(vtemp);
+		final byte[] signiture = new byte[3];
+		sfis.read(signiture);
+		if((char)signiture[0] != 'x' || (char)signiture[1] != 'm' || (char)signiture[2] != 'p') {
+			sfis.close();
+			throw new IOException("File signiture is not XMP.");
+		}
+		byte[] one = new byte[4];
 		sfis.read(one);
-		final int files = byteToInt(one);
+		final int files = Bitwork.byteToInt(one);
 		final byte[] lenheader = new byte[files * 8];
 		sfis.read(lenheader);
-		final int[] lenints = byteRangeToInt(lenheader);
+		final int[] lenints = Bitwork.byteRangeToInt(lenheader);
 		for (int i=0; i<files; i++) {
 			final byte[] name = new byte[lenints[i*2+1]], fbytes = new byte[lenints[i*2]];
+			sfis.read(name);
+			sfis.read(fbytes);
 			final File out = new File(destination, new String(name));
 			final FileOutputStream xmpfos = new FileOutputStream(out);
 			xmpfos.write(fbytes);
