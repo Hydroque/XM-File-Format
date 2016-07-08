@@ -38,7 +38,6 @@ public class XMConverter {
 	 * xmi	format	compression	destination	{files, ...}
 	 * xmi	format	compression	destination	folder
 	 * 
-	 * -- not supported --
 	 * xmm	format	compression	destination {files, ...}
 	 * xmm	format	compression	destination	folder
 	 * 
@@ -52,7 +51,6 @@ public class XMConverter {
 	 * xmi C:\Users\User\Desktop C:\Images\png\example.png C:\Images\png\example2.png
 	 * xmi C:\Users\User\Desktop C:\Images\png
 	 * 
-	 * -- not supported --
 	 * xmm C:\Users\User\Desktop C:\Images\png\example.png C:\Images\png\example2.png
 	 * xmm C:\Users\User\Desktop C:\Images\png\
 	 * 
