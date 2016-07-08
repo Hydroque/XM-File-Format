@@ -19,12 +19,11 @@
  */
 package hydroque.image;
 
-import static hydroque.Bitwork.*;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import hydroque.Bitwork;
 import hydroque.image.data.Image;
 
 /*
@@ -51,14 +50,19 @@ public class XMWriter {
 	public static void writeXMI(Image image, File destination) throws IOException {
 		destination.createNewFile();
 		final FileOutputStream fos = new FileOutputStream(destination);
-		fos.write(image.hasTransparency() ? 0b1 : 0b0);
+		final byte[] width_b = Bitwork.intToByte(image.getWidth()),
+				height_b = Bitwork.intToByte(image.getHeight());
+		fos.write(new byte[]{(byte)'x', (byte)'m', (byte)'i'});
 		fos.write(new byte[]{
-				(byte) ((image.getWidth() >>> 0) &0xFF),
-				(byte) ((image.getWidth() >>> 8) &0xFF),
-				(byte) ((image.getHeight()>>> 0) &0xFF),
-				(byte) ((image.getHeight()>>> 8) &0xFF)
+				width_b[0],
+				width_b[1],
+				height_b[0],
+				height_b[1]
 			});
-		fos.write(image.getPixels());
+		fos.write(image.getColorModel());
+		fos.write(image.getCompression());
+		fos.write(Bitwork.intToByte(image.getBody().length));
+		fos.write(image.getBody());
 		fos.flush();
 		fos.close();
 	}
@@ -81,19 +85,21 @@ public class XMWriter {
 	public static void writeXMM(Image[] images, File destination) throws IOException {
 		destination.createNewFile();
 		final FileOutputStream fos = new FileOutputStream(destination);
-		boolean transparency = false;
-		for (final Image img : images)
-			if((transparency = img.hasTransparency()))
-				break;
-		fos.write(transparency ? 0b1 : 0b0);
+		fos.write(new byte[]{(byte)'x', (byte)'m', (byte)'m'});
 		fos.write(images.length);
+		fos.write(images[0].getColorModel());
+		fos.write(images[0].getCompression());
 		for (final Image img : images) {
-			fos.write(intShortToByte(img.getWidth()));
-			fos.write(intShortToByte(img.getHeight()));
-		}
-		for (final Image img : images) {
-			fos.write(img.hasTransparency() ? 0b1 : 0b0);
-			fos.write(img.getPixels());
+			final byte[] width_b = Bitwork.intToByte(img.getWidth()),
+					height_b = Bitwork.intToByte(img.getHeight());
+			fos.write(Bitwork.intToByte(img.getBody().length));
+			fos.write(new byte[]{
+					width_b[0],
+					width_b[1],
+					height_b[0],
+					height_b[1]
+				});
+			fos.write(img.getBody());
 		}
 		fos.flush();
 		fos.close();

@@ -25,8 +25,8 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import de.matthiasmann.twl.utils.PNGDecoder;
+import hydroque.Bitwork;
 import hydroque.image.data.Image;
-import hydroque.image.data.Mipmap;
 
 /*
  * Loads files into Image containers
@@ -40,7 +40,7 @@ public class XMLoader {
 	 * 
 	 * @param location file to be loaded in
 	 * @param decoder PNGDecoder to utilize
-	 * @param storage a manditory buffer to load data into
+	 * @param storage a mandatory buffer to load data into
 	 * 
 	 * @return Image generated
 	 */
@@ -49,14 +49,7 @@ public class XMLoader {
 		decoder.decode(storage, decoder.getWidth() * 4);
 		decoder.close();
 		storage.flip();
-		storage.rewind();
-		boolean transparency = false;
-		for (int i=3; i<storage.array().length; i+=4) {
-			if((transparency = storage.array()[i] != -1))
-				break;
-		}
-		storage.flip();
-		return new Image(width, height, transparency, storage.array());
+		return new Image(width, height, Image.RGBA, Image.NONE, storage.array());
 	}
 	
 	/*
@@ -76,22 +69,33 @@ public class XMLoader {
 	 */
 	public static Image loadImageXMI(File location) throws IOException {
 		final FileInputStream fis = new FileInputStream(location);
-		final byte[] header = new byte[5];
+		final byte[] signiture = new byte[3];
+		fis.read(signiture);
+		if((char)signiture[0] != 'x' || (char)signiture[1] != 'm' || (char)signiture[2] != 'i') {
+			fis.close();
+			throw new IOException("File signiture is not XMI.");
+		}
+		final byte[] header = new byte[6];
+		final byte[] count = new byte[4];
 		fis.read(header);
-		final boolean transparency = header[0] == 1;
-		final int width = (header[2]&0xFF)<<8 | (header[1]&0xFF),
-				 height = (header[4]&0xFF)<<8 | (header[3]&0xFF);
-		final byte[] body = new byte[width * height * 4];
+		fis.read(count);
+		final int byte_count = Bitwork.byteToInt(count);
+		final byte[] body = new byte[byte_count];
 		fis.read(body);
 		fis.close();
-		return new Image(width, height, transparency, body);
+		return new Image(
+				Bitwork.byteToShort(header[1], header[0]),
+				Bitwork.byteToShort(header[3], header[2]),
+				header[4],
+				header[5],
+				body);
 	}
 	
 	/*
 	 * Overload method for {@link loadImageXMM}
 	 * 
 	 */
-	public static Mipmap loadImageXMM(String location) throws IOException {
+	public static Image[] loadImageXMM(String location) throws IOException {
 		return loadImageXMM(new File(location));
 	}
 	
@@ -102,23 +106,29 @@ public class XMLoader {
 	 * 
 	 * @return Mipmap generated
 	 */
-	public static Mipmap loadImageXMM(File location) throws IOException {
+	public static Image[] loadImageXMM(File location) throws IOException {
 		final FileInputStream fis = new FileInputStream(location);
-		final byte[] header = new byte[2];
+		final byte[] signiture = new byte[3];
+		fis.read(signiture);
+		if((char)signiture[0] != 'x' || (char)signiture[1] != 'm' || (char)signiture[2] != 'm') {
+			fis.close();
+			throw new IOException("File signiture is not XMI.");
+		}
+		final byte[] header = new byte[3];
 		fis.read(header);
-		final byte[] sizes = new byte[header[1]*2*2];
-		fis.read(sizes);
-		final Image[] images = new Image[header[1]];
-		for (int i=0; i<header[1]; i++) {
-			final boolean transparency = fis.read() == 1;
-			final int width = (sizes[i*4+1]&0xFF)<<8 | (sizes[i*4]&0xFF),
-					 height = (sizes[i*4+3]&0xFF)<<8 | (sizes[i*4+2]&0xFF);
-			final byte[] body = new byte[width * height * 4];
+		final Image[] images = new Image[header[0]];
+		for (int i=0; i<header[0]; i++) {
+			final byte[] count = new byte[4];
+			final byte[] size = new byte[4];
+			fis.read(count);
+			fis.read(size);
+			final int byte_count = Bitwork.byteToInt(count);
+			final byte[] body = new byte[byte_count];
 			fis.read(body);
-			images[i] = new Image(width, height, transparency, body);
+			images[i] = new Image(Bitwork.byteToShort(size[1], size[0]), Bitwork.byteToShort(size[3], size[2]), header[1], header[2], body);
 		}
 		fis.close();
-		return new Mipmap(header[0] == 1, images);
+		return images;
 	}
 	
 }
