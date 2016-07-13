@@ -126,6 +126,7 @@ public class XMConverter {
 					}
 					if(args[1].equals("4"))
 						out = data;
+					System.out.println("To " + desti.getAbsolutePath() + " writing " + f.getName() + ".xmi");
 					XMWriter.writeXMI(out, new File(desti, f.getName() + ".xmi"));
 				}
 			} catch (IOException e) {
@@ -199,6 +200,10 @@ public class XMConverter {
 					if(file_type.equalsIgnoreCase("xmi"))
 						images[i] = XMLoader.loadImageXMI(files[i]);
 				}
+				System.out.println("To " + desti.getAbsolutePath() + " writing " + files[0].getName() + ".xmm");
+				System.out.println("Images:");
+				for (int i=0; i<images.length; i++)
+					System.out.println(i + " " + files[0].getName());
 				XMWriter.writeXMM(images, new File(desti, files[0].getName() + ".xmm"));
 			} catch (IOException e) {
 				e.printStackTrace();
