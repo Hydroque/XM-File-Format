@@ -203,7 +203,7 @@ public class XMConverter {
 				System.out.println("To " + desti.getAbsolutePath() + " writing " + files[0].getName() + ".xmm");
 				System.out.println("Images:");
 				for (int i=0; i<images.length; i++)
-					System.out.println(i + " " + files[0].getName());
+					System.out.println(i + " " + files[i].getName());
 				XMWriter.writeXMM(images, new File(desti, files[0].getName() + ".xmm"));
 			} catch (IOException e) {
 				e.printStackTrace();
