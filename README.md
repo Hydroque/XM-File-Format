@@ -1,3 +1,6 @@
+
+Outdated, inefficient, and merged in another language. This was also trumped in that language. Since most of this was just a file format, this was a bunch of code which helped convert files to a format to specialize for less-than-brilliant formats.
+
 # XM Files Format
 Simple files. Faster loading. Better storage. Video game quality file formats and compression.
 
